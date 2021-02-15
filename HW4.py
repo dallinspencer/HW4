@@ -8,7 +8,7 @@ import scipy as sc
 
 #Question 2
 def arnoldi(A,k,b):
-    Q = np.zeros((len(b),k))
+    Q = np.zeros((len(b),k+1))
     H = np.zeros((k+1,k))
     Q[:,0] = b/np.linalg.norm(b)
     for j in range(k):
@@ -25,15 +25,11 @@ def mygmres(l,b,x0,n,M,A):
     Q = np.zeros((len(b),l+1))
     H = np.zeros((l+1,l))
     r0 = b - np.matmul(A,x0)
-    for i in range(l):
-        #Should this be here?
-        #r0 = b - np.matmul(A,x0)
+    for i in range(l-1):        
         e1 = np.zeros(l)
         e1[0] = 1
         H,Q = arnoldi(A,l,b)
         alpha = e1 * np.linalg.norm(r0)
-        print("H = ", H)
-        print("\nalpha = ", alpha, "\n")
         y, res, rnk, s = sc.linalg.lstsq(H,alpha)
     sol = np.matmul(Q[:,:i+1],y) + x0
     return sol
