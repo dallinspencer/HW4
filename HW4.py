@@ -11,7 +11,7 @@ def arnoldi(A,k,b):
     Q = np.zeros((len(b),k))
     H = np.zeros((k+1,k))
     Q[:,0] = b/np.linalg.norm(b)
-    for j in range(k-1):
+    for j in range(k):
         Q[:,j+1] = np.matmul(A,Q[:,j])
         for i in range(j+1):
             H[i,j] = np.dot(Q[:,i],Q[:,j+1])
@@ -22,20 +22,21 @@ def arnoldi(A,k,b):
     
 
 def mygmres(l,b,x0,n,M,A):
-    Q = np.zeros((len(b),n+1))
-    H = np.zeros((n+1,n))
-    Q[:,0] = b/np.linalg.norm(b)
-    x = b
+    Q = np.zeros((len(b),l+1))
+    H = np.zeros((l+1,l))
+    r0 = b - np.matmul(A,x0)
     for i in range(l):
-        for j in range(n):
-            H, Q = arnoldi(A,n,x)
-            e1 = np.zeros(n)
-            e1[0]=1
-            y, res, rnk, s = sc.linalg.lstsq(H,np.linalg.norm(b)*e1)
-            print(Q)
-            print(y)
-            x = np.matmul(Q,y)
-    return x                     
+        #Should this be here?
+        #r0 = b - np.matmul(A,x0)
+        e1 = np.zeros(l)
+        e1[0] = 1
+        H,Q = arnoldi(A,l,b)
+        alpha = e1 * np.linalg.norm(r0)
+        print("H = ", H)
+        print("\nalpha = ", alpha, "\n")
+        y, res, rnk, s = sc.linalg.lstsq(H,alpha)
+    sol = np.matmul(Q[:,:i+1],y) + x0
+    return sol
 
 from scipy.sparse import csc_matrix
 from scipy.sparse.linalg import gmres
@@ -45,5 +46,5 @@ b = np.array([2, 4, -1])
 x, exitCode = gmres(A, b)
 print(x, 'Scipy rsolution')
 A = A.toarray()
-x = mygmres(10,b,x+1.5,3,[0],A)
+x = mygmres(23,b,x+1.5,3,[0],A)
 print(x)
