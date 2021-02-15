@@ -1,5 +1,5 @@
 import numpy as np
-
+import scipy as sc
 #Question 1
 
 
@@ -30,7 +30,7 @@ def mygmres(l,b,x0,n,M,A):
             H, Q = arnoldi(A,n,x)
             e1 = np.zeros(n)
             e1[0]=1
-            y, res, rnk, s = np.linalg.lstsq(H,np.linalg.norm(b)*e1)
+            y, res, rnk, s = sc.linalg.lstsq(H,np.linalg.norm(b)*e1)
             print(Q)
             print(y)
             x = np.matmul(Q,y)
@@ -44,5 +44,5 @@ b = np.array([2, 4, -1], dtype=float)
 x, exitCode = gmres(A, b)
 print(x, 'Scipy rsolution')
 A = A.toarray()
-x = mygmres(500,b,x+1.5,3,[0],A)
+x = mygmres(10,b,x+1.5,3,[0],A)
 print(x)
