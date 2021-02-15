@@ -61,7 +61,7 @@ for n = [16,32,64,128]
     x = linspace(0,1,n);
     subplot(2,2,count)
     plot(x,sol)
-    title(sprintf('Solution with n = %d and gamma=%d',n,n+1))
+    title(sprintf('Solution with n = %d and gamma=1',n))
     xlabel('x')
     ylabel('y')
     count = count + 1;
