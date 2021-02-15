@@ -9,8 +9,9 @@ for n = [16,32,64,128]
     [A,b] = popMatrices(n,1);  
     x0 = zeros(n,1);
     M = eye(n);
+    [L,~] = ilu(A);
     while error > 10^(-6)
-        [sol,xs,ys,Vs,Hs] = gmres_matlab(A,b,l,x0, M, n);
+        [sol,xs,ys,Vs,Hs] = gmres_matlab(inv(L)*A,inv(L)*b,l,x0, M, n);
         res = b - A*sol;
         error = norm(res)/n;
         l = l * 2;
