@@ -35,6 +35,7 @@ def mygmres(l,b,x0,n,M,A):
         print(A)
         print(np.shape(np.array([b,])))
         H,Q = kry.utils.arnoldi(A,np.transpose(np.array([b,])))
+        
         alpha = e1 * np.linalg.norm(r0)
         print("H = ", H)
         print("\nalpha = ", alpha, "\n")
