@@ -7,19 +7,18 @@ import numpy as np
 
 
 #Question 2
-def arnoldi(A,n,x0):
-    q = np.zeros((n,n))
-    q[0,:] = x0/np.linalg.norm(x0)
-    h = np.zeros((n,n))
-    for i in range(0,n-1):
-        v = np.matmul(A,q[i][:])
-        
-        for j in range(0,i-1):
-            h[j][i] = np.dot(q,v)
-            v = v-h[j][i]*q
-        h[i+1][i] = np.linalg.norm(v)
-        q[i+1][:] = v/h[i+1][i]
-    return h,q
+def arnoldi(A,k,b):
+    Q = np.zeros((len(b),k))
+    H = np.zeros((k+1,k))
+    Q[:,0] = b/np.linalg.norm(b)
+    for j in range(k-1):
+        Q[:,j+1] = np.matmul(A,Q[:,j])
+        for i in range(j+1):
+            H[i,j] = np.dot(Q[:,i],Q[:,j+1])
+            Q[:,j+1] = Q[:,j+1] - H[i,j]*Q[:,i]
+        H[j+1,j] = np.linalg.norm(Q[:,j+1])
+        Q[:,j+1] /= H[j+1,j]
+    return H[:-1,:], Q
     
 
 def mygmres(l,b,x0,n,M,A):
@@ -48,5 +47,5 @@ b = np.array([2, 4, -1], dtype=float)
 x, exitCode = gmres(A, b)
 print(x, 'Scipy rsolution')
 A = A.toarray()
-x = mygmres(10,b,x+1.5,3,[0],A)
+x = mygmres(500,b,x+1.5,3,[0],A)
 print(x)
