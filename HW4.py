@@ -29,11 +29,14 @@ def mygmres(l,b,x0,n,M,A):
         x = x0
         for j in range(n):
             H, Q = arnoldi(A,n,x)
+            H = np.transpose(H)
             e1 = np.zeros(n)
             e1[0]=1
             y, res, rnk, s = np.linalg.lstsq(H,np.linalg.norm(b)*e1)
-            print(Q)
-            print(y)
+            print("Q:",Q)
+            print("y:",y)
+            print("H:",H)
+            print("Norm(b):",np.linalg.norm(b))
             x = np.matmul(Q,y)
     return x                     
 
