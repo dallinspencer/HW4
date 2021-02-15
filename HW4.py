@@ -22,28 +22,26 @@ def arnoldi(A,k,b):
     
 
 def mygmres(l,b,x0,n,M,A):
-    Q = np.zeros((n,n))
-    H = np.zeros((n,n))
+    Q = np.zeros((len(b),n+1))
+    H = np.zeros((n+1,n))
+    Q[:,0] = b/np.linalg.norm(b)
+    x = b
     for i in range(l):
-        x = x0
         for j in range(n):
             H, Q = arnoldi(A,n,x)
-            H = np.transpose(H)
             e1 = np.zeros(n)
             e1[0]=1
             y, res, rnk, s = np.linalg.lstsq(H,np.linalg.norm(b)*e1)
-            print("Q:",Q)
-            print("y:",y)
-            print("H:",H)
-            print("Norm(b):",np.linalg.norm(b))
-            x = np.matmul(Q,y)
+            print("Q[:,j+1]=",Q[:,j])
+            print("y=",y)
+            x = np.matmul(Q[:,j+1],y)
     return x                     
 
 from scipy.sparse import csc_matrix
 from scipy.sparse.linalg import gmres
 A = csc_matrix([[3, 2, 0], [1, -1, 0], [0, 5, 1]], dtype=float)
 
-b = np.array([2, 4, -1], dtype=float)
+b = np.array([2, 4, -1])
 x, exitCode = gmres(A, b)
 print(x, 'Scipy rsolution')
 A = A.toarray()
