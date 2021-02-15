@@ -1,4 +1,4 @@
-function[solution,xs,ys,Vs,Hs]=gmres_matlab(A,b,l,x0,M,n)
+function[xs,ys,Vs,Hs]=gmres_matlab(A,b,l,x0,M,n)
 r0=b - A*x0;
 beta=norm(r0);
 V(:,1)=r0/norm(r0);
@@ -24,4 +24,5 @@ for i=1:length(ys)
 end
 Vs = V(:,1:end-1);
 Hs=H;
-solution = Vs*ys + x0;
+
+function[A, b] 
