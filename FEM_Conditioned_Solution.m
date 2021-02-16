@@ -2,14 +2,14 @@
 figure(1)
 count = 1;
 errMat = [];%[n l error]
-sgtitle('FEM Solutions')
+sgtitle('Conditioned FEM Solutions')
 for n = [16,32,64,128]
     l = 2;
     error = 1;
     [A,b] = popMatrices(n,1);  
     x0 = zeros(n,1);
     M = eye(n);
-    [L,~] = ilu(A);
+    [L,~] = ilu(sparse(A));
     while error > 10^(-6)
         [sol,xs,ys,Vs,Hs] = gmres_matlab(inv(L)*A,inv(L)*b,l,x0, M, n);
         res = b - A*sol;
@@ -44,15 +44,16 @@ zlabel('error')
 figure(3)
 count = 1;
 errMat = [];%[n l error]
-sgtitle('FEM Solutions')
+sgtitle('Conditioned FEM Solutions')
 for n = [16,32,64,128]
     l = 2;
     error = 1;
     [A,b] = popMatrices(n,n+1);  
     x0 = zeros(n,1);
     M = eye(n);
+    [L,~] = ilu(sparse(A));
     while error > 10^(-6)
-        [sol,xs,ys,Vs,Hs] = gmres_matlab(A,b,l,x0, M, n);
+        [sol,xs,ys,Vs,Hs] = gmres_matlab(inv(L)*A,inv(L)*b,l,x0, M, n);
         res = b - A*sol;
         error = norm(res)/n;
         l = l * 2;
@@ -78,3 +79,7 @@ title('Error Analysis for gamma = n+1')
 xlabel('n')
 ylabel('l')
 zlabel('error')
+
+%The conditioned method converges MUCH quicker than the nonconditioned
+%method. This is because the condition number is greatly improved when we
+%left multiply by the triangular matrix L on both sides of the equation. 
