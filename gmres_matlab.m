@@ -7,7 +7,7 @@ for j=1:l
     W(:,j)=A*V(:,j);
     for i=1:j
         H(i,j)=dot(W(:,j),V(:,i));
-        W(:,j)=W(:,j)-H(i,j)*V(:,i);
+        W(:,j)=H(i,j)*V(:,i);
     end
     H(j+1,j)=norm(W(:,j));
     if H(j+1,j)==0
